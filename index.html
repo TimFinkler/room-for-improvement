@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#128273" />
+<meta name="description" content="A pocket think tank: share ideas for making the world better, and turn good intentions into concrete actions." />
+<title>Room for Improvement</title>
+</head>
+<body>
+<style>
+  :root {
+    --ground: #F5F8F6;
+    --surface: #FFFFFF;
+    --surface-2: #EDF3F0;
+    --ink: #12242C;
+    --ink-soft: #43585F;
+    --ink-faint: #6E8188;
+    --line: #D5E0DC;
+    --accent: #128273;
+    --accent-ink: #0B5A4F;
+    --accent-soft: #DCEEE9;
+    --on-accent: #FFFFFF;
+    --cat-ocean: #2C6E9E;
+    --cat-land: #4E7A3A;
+    --cat-community: #A05A2C;
+    --cat-learning: #6A5AA0;
+    --cat-health: #B04A6E;
+    --cat-materials: #57707A;
+    --shadow: 0 1px 2px rgba(18,36,44,.06), 0 8px 24px rgba(18,36,44,.07);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0D1B20;
+      --surface: #14262C;
+      --surface-2: #1B3038;
+      --ink: #E8F0ED;
+      --ink-soft: #A9BDB9;
+      --ink-faint: #7E9490;
+      --line: #26414A;
+      --accent: #2FB3A0;
+      --accent-ink: #7BD6C8;
+      --accent-soft: #143B38;
+      --on-accent: #06231F;
+      --cat-ocean: #6FAEDB;
+      --cat-land: #93BE7C;
+      --cat-community: #D99A64;
+      --cat-learning: #A99AD8;
+      --cat-health: #D98BA5;
+      --cat-materials: #93AAB5;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="light"] {
+    --ground: #F5F8F6; --surface: #FFFFFF; --surface-2: #EDF3F0;
+    --ink: #12242C; --ink-soft: #43585F; --ink-faint: #6E8188; --line: #D5E0DC;
+    --accent: #128273; --accent-ink: #0B5A4F; --accent-soft: #DCEEE9; --on-accent: #FFFFFF;
+    --cat-ocean: #2C6E9E; --cat-land: #4E7A3A; --cat-community: #A05A2C;
+    --cat-learning: #6A5AA0; --cat-health: #B04A6E; --cat-materials: #57707A;
+    --shadow: 0 1px 2px rgba(18,36,44,.06), 0 8px 24px rgba(18,36,44,.07);
+  }
+  :root[data-theme="dark"] {
+    --ground: #0D1B20; --surface: #14262C; --surface-2: #1B3038;
+    --ink: #E8F0ED; --ink-soft: #A9BDB9; --ink-faint: #7E9490; --line: #26414A;
+    --accent: #2FB3A0; --accent-ink: #7BD6C8; --accent-soft: #143B38; --on-accent: #06231F;
+    --cat-ocean: #6FAEDB; --cat-land: #93BE7C; --cat-community: #D99A64;
+    --cat-learning: #A99AD8; --cat-health: #D98BA5; --cat-materials: #93AAB5;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+  input, textarea, select { font: inherit; color: var(--ink); }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, a:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  .shell { max-width: 680px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
+
+  /* ---------- Header ---------- */
+  header.app {
+    position: sticky; top: 0; z-index: 30;
+    background: var(--ground);
+    padding: max(10px, env(safe-area-inset-top)) 20px 0;
+  }
+  .masthead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; }
+  .wordmark { font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: .01em; }
+  .wordmark em { font-style: italic; color: var(--accent); }
+  .masthead .tools { display: flex; gap: 4px; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: grid; place-items: center; color: var(--ink-soft);
+  }
+  .icon-btn:hover { background: var(--surface-2); }
+  .waterline { height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--cat-ocean) 55%, transparent 100%); }
+
+  main { flex: 1; padding: 18px 20px 110px; }
+
+  /* ---------- Tabs ---------- */
+  .tabbar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tabbar-inner { max-width: 680px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .tab {
+    padding: 10px 4px 12px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: var(--ink-faint); font-size: 11.5px; font-weight: 600; letter-spacing: .04em;
+  }
+  .tab svg { width: 22px; height: 22px; }
+  .tab[aria-selected="true"] { color: var(--accent); }
+  .panel { display: none; }
+  .panel.active { display: block; animation: rise .25s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Shared bits ---------- */
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
+  h2.section { font-family: var(--serif); font-size: 26px; line-height: 1.2; margin: 4px 0 6px; text-wrap: balance; font-weight: 600; }
+  .lede { color: var(--ink-soft); margin: 0 0 18px; max-width: 52ch; }
+
+  .chiprow { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px; scrollbar-width: none; }
+  .chiprow::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto; padding: 6px 13px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface);
+    font-size: 13px; font-weight: 600; color: var(--ink-soft); white-space: nowrap;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 16px 14px; box-shadow: var(--shadow); margin-bottom: 12px;
+  }
+  .card h3 { font-family: var(--serif); font-size: 19px; line-height: 1.25; margin: 8px 0 6px; font-weight: 600; }
+  .card .pitch { color: var(--ink-soft); margin: 0 0 10px; font-size: 14.5px; }
+  .card .step { font-size: 13.5px; color: var(--ink); background: var(--surface-2); border-radius: 8px; padding: 8px 10px; margin: 0 0 12px; }
+  .card .step b { color: var(--accent-ink); }
+  .meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .cat {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px; color: var(--ground); background: var(--c, var(--ink-soft));
+  }
+  .origin { font-size: 12.5px; color: var(--ink-faint); }
+  .cardfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .support {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line);
+    font-size: 13.5px; font-weight: 600; color: var(--ink-soft);
+    transition: transform .12s ease;
+  }
+  .support:active { transform: scale(.95); }
+  .support[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+  .support .n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .mine { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
+
+  .fab {
+    position: fixed; right: max(18px, calc(50vw - 340px + 18px)); bottom: calc(74px + env(safe-area-inset-bottom));
+    z-index: 25; background: var(--accent); color: var(--on-accent);
+    border-radius: 999px; padding: 13px 20px; font-weight: 700; font-size: 15px;
+    box-shadow: 0 6px 20px rgba(18,36,44,.25); display: none; align-items: center; gap: 8px;
+  }
+  .fab.show { display: inline-flex; }
+  .fab:active { transform: scale(.97); }
+
+  /* ---------- Sheet (modal) ---------- */
+  .scrim { position: fixed; inset: 0; background: rgba(10,20,25,.45); z-index: 40; display: none; }
+  .scrim.open { display: block; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 41;
+    max-width: 680px; margin: 0 auto;
+    background: var(--surface); border-radius: 18px 18px 0 0;
+    padding: 18px 20px calc(20px + env(safe-area-inset-bottom));
+    max-height: 88dvh; overflow-y: auto;
+    transform: translateY(105%); transition: transform .28s cubic-bezier(.32,.72,.2,1);
+  }
+  .sheet.open { transform: none; }
+  .sheet h3 { font-family: var(--serif); font-size: 21px; margin: 4px 0 2px; font-weight: 600; }
+  .sheet .hint { color: var(--ink-faint); font-size: 13.5px; margin: 0 0 14px; }
+  .grab { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 12px; }
+  .field { margin-bottom: 13px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 700; letter-spacing: .03em; color: var(--ink-soft); margin-bottom: 5px; }
+  .field input, .field textarea, .field select {
+    width: 100%; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--ground); padding: 10px 12px; font-size: 15px;
+  }
+  .field textarea { min-height: 84px; resize: vertical; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border-radius: 999px; padding: 12px 22px; font-weight: 700; font-size: 15px;
+  }
+  .btn-primary { background: var(--accent); color: var(--on-accent); width: 100%; }
+  .btn-primary:active { transform: scale(.98); }
+  .btn-quiet { color: var(--ink-soft); width: 100%; padding: 10px; }
+
+  /* ---------- Act tab ---------- */
+  .qlabel { font-size: 13px; font-weight: 700; color: var(--ink-soft); margin: 14px 0 8px; letter-spacing: .02em; }
+  .action { border-left: 3px solid var(--c, var(--accent)); }
+  .action .effort { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .action ol { margin: 8px 0 10px; padding-left: 20px; font-size: 14px; color: var(--ink-soft); }
+  .action ol li { margin-bottom: 4px; }
+  .action ol li::marker { color: var(--accent); font-weight: 700; }
+  .done-btn {
+    font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .done-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .tally {
+    display: flex; align-items: baseline; gap: 10px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;
+  }
+  .tally[hidden] { display: none; }
+  .tally .big { font-family: var(--serif); font-size: 34px; font-weight: 600; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+  .tally .lbl { font-size: 13px; color: var(--ink-soft); max-width: 26ch; line-height: 1.35; }
+
+  /* ---------- Guide tab ---------- */
+  .chatlog { display: flex; flex-direction: column; gap: 10px; padding-bottom: 8px; min-height: 200px; }
+  .msg { max-width: 88%; padding: 10px 14px; border-radius: 16px; font-size: 15px; white-space: pre-wrap; }
+  .msg.me { align-self: flex-end; background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 5px; }
+  .msg.bot { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 5px; }
+  .msg.bot b { color: var(--accent-ink); }
+  .composer {
+    position: sticky; bottom: calc(64px + env(safe-area-inset-bottom));
+    display: flex; gap: 8px; padding-top: 10px; background: var(--ground);
+  }
+  .composer input {
+    flex: 1; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--surface); padding: 11px 16px; font-size: 15px;
+  }
+  .composer button {
+    background: var(--accent); color: var(--on-accent); border-radius: 50%;
+    width: 44px; height: 44px; flex: 0 0 auto; display: grid; place-items: center;
+  }
+  .starters { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+  .starters .chip { font-size: 12.5px; }
+  .ai-note { font-size: 12px; color: var(--ink-faint); margin: 6px 0 0; }
+  .ai-note button { color: var(--accent-ink); font-weight: 600; text-decoration: underline; font-size: 12px; padding: 0; }
+
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%) translateY(20px);
+    bottom: calc(80px + env(safe-area-inset-bottom)); z-index: 60;
+    background: var(--ink); color: var(--ground); border-radius: 999px;
+    padding: 10px 18px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none;
+    transition: opacity .25s, transform .25s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .empty { text-align: center; color: var(--ink-faint); padding: 30px 10px; font-size: 14.5px; }
+</style>
+
+<div class="shell">
+  <header class="app">
+    <div class="masthead">
+      <div class="wordmark">Room for <em>Improvement</em></div>
+      <div class="tools">
+        <button class="icon-btn" id="settingsBtn" aria-label="AI settings" title="AI settings">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"></circle><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="waterline"></div>
+  </header>
+
+  <main>
+    <!-- ============ IDEAS ============ -->
+    <section class="panel active" id="panel-ideas" role="tabpanel" aria-label="Ideas">
+      <div class="kicker">The commons</div>
+      <h2 class="section">Good ideas travel.</h2>
+      <p class="lede">Ellen MacArthur sailed the world alone, then spent her life carrying one big idea between places: waste nothing, circulate everything. Add yours — or back one and help it reach a new harbor.</p>
+      <div class="chiprow" id="ideaFilters"></div>
+      <div id="ideaList"></div>
+    </section>
+
+    <!-- ============ ACT ============ -->
+    <section class="panel" id="panel-act" role="tabpanel" aria-label="Act">
+      <div class="kicker">Get actionable</div>
+      <h2 class="section">What can I do, today?</h2>
+      <p class="lede">Pick what you care about and how much time you have. You'll get real, concrete moves — not vague encouragement.</p>
+      <div class="tally" id="tally" hidden>
+        <div class="big" id="tallyN">0</div>
+        <div class="lbl">actions you've completed. Small moves, honestly counted.</div>
+      </div>
+      <div class="qlabel">I care about…</div>
+      <div class="chiprow" id="causeChips"></div>
+      <div class="qlabel">I have…</div>
+      <div class="chiprow" id="timeChips"></div>
+      <div id="actionList"></div>
+    </section>
+
+    <!-- ============ GUIDE ============ -->
+    <section class="panel" id="panel-guide" role="tabpanel" aria-label="Guide">
+      <div class="kicker">Your co-navigator</div>
+      <h2 class="section">Talk it through.</h2>
+      <p class="lede">Not sure where to start, or want to sharpen an idea before posting it? Ask the Guide.</p>
+      <div class="starters" id="starters"></div>
+      <div class="chatlog" id="chatlog" aria-live="polite"></div>
+      <div class="composer">
+        <input id="chatInput" type="text" placeholder="Ask anything — e.g. “I have weekends free”" autocomplete="off" aria-label="Message the Guide" />
+        <button id="chatSend" aria-label="Send">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-7-5 16-3.5-6L4 12z"></path></svg>
+        </button>
+      </div>
+      <p class="ai-note" id="aiNote"></p>
+    </section>
+  </main>
+</div>
+
+<button class="fab show" id="fabNew">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+  Share an idea
+</button>
+
+<nav class="tabbar" aria-label="Sections">
+  <div class="tabbar-inner" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-panel="ideas" id="tab-ideas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6.5 6.5 0 0 0-4 11.6c.7.6 1 1.4 1 2.4h6c0-1 .3-1.8 1-2.4A6.5 6.5 0 0 0 12 3z"></path></svg>
+      Ideas
+    </button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="act" id="tab-act">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H13L13 2z"></path></svg>
+      Act
+    </button>
+    <button class="tab" role="tab" aria-selected="false" data-panel="guide" id="tab-guide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 17v.01M12 13.5c0-2 2.5-2 2.5-4A2.5 2.5 0 0 0 9.6 9"></path></svg>
+      Guide
+    </button>
+  </div>
+</nav>
+
+<!-- New idea sheet -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="ideaSheet" role="dialog" aria-modal="true" aria-labelledby="ideaSheetTitle">
+  <div class="grab"></div>
+  <h3 id="ideaSheetTitle">Share an idea</h3>
+  <p class="hint">The best posts name a real problem, a fix, and the first step someone could take this week.</p>
+  <div class="field">
+    <label for="fTitle">Idea title</label>
+    <input id="fTitle" maxlength="90" placeholder="e.g. Tool libraries in every neighborhood" />
+  </div>
+  <div class="field">
+    <label for="fPitch">What is it, and why would it help?</label>
+    <textarea id="fPitch" maxlength="600" placeholder="Two or three honest sentences beat a manifesto."></textarea>
+  </div>
+  <div class="field">
+    <label for="fCat">Cause</label>
+    <select id="fCat"></select>
+  </div>
+  <div class="field">
+    <label for="fPlace">Where are you writing from? <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label>
+    <input id="fPlace" maxlength="60" placeholder="e.g. Hamburg, Germany" />
+  </div>
+  <div class="field">
+    <label for="fStep">A first step anyone could take</label>
+    <input id="fStep" maxlength="160" placeholder="e.g. Ask your library if they'd host a shelf of tools" />
+  </div>
+  <button class="btn btn-primary" id="fSubmit">Post to the commons</button>
+  <button class="btn btn-quiet" id="fCancel">Cancel</button>
+</div>
+
+<!-- Settings sheet -->
+<div class="sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="grab"></div>
+  <h3 id="settingsTitle">Guide settings</h3>
+  <p class="hint">The Guide works offline with a built-in coach. Paste a Claude API key to power it with a live AI instead — the key stays on this device only.</p>
+  <div class="field">
+    <label for="fKey">Claude API key (optional)</label>
+    <input id="fKey" type="password" placeholder="sk-ant-…" autocomplete="off" />
+  </div>
+  <button class="btn btn-primary" id="keySave">Save</button>
+  <button class="btn btn-quiet" id="keyClear">Remove key &amp; use built-in coach</button>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Room for Improvement — a pocket think tank for a better world
+   ============================================================ */
+
+const CATS = {
+  materials: { label: "Circular economy", color: "var(--cat-materials)" },
+  ocean:     { label: "Ocean & climate",  color: "var(--cat-ocean)" },
+  land:      { label: "Nature & food",    color: "var(--cat-land)" },
+  community: { label: "Community",        color: "var(--cat-community)" },
+  learning:  { label: "Education",        color: "var(--cat-learning)" },
+  health:    { label: "Health & care",    color: "var(--cat-health)" },
+};
+
+const SEED_IDEAS = [
+  { id: "s1", title: "Design waste out, from the start", cat: "materials", place: "Isle of Wight → the world",
+    pitch: "After sailing solo around the globe with only what her boat carried, Ellen MacArthur asked why economies can't work like that too: nothing wasted, everything circulated. Products designed from day one to be repaired, reused, and remade.",
+    step: "Before your next purchase, check if a repaired or refurbished version exists.", supports: 48 },
+  { id: "s2", title: "Repair cafés on every high street", cat: "materials", place: "Amsterdam, Netherlands",
+    pitch: "Volunteer-run meetups where neighbors fix toasters, jeans and bikes together instead of binning them. Started in Amsterdam in 2009; now thousands worldwide. Fixing things turns out to be a social glue as much as a waste fix.",
+    step: "Search “repair café near me” — or ask a community center to host the first one.", supports: 34 },
+  { id: "s3", title: "Rescue food before it's wasted", cat: "land", place: "Copenhagen, Denmark",
+    pitch: "Roughly a third of food produced is never eaten. Apps and volunteer networks now connect bakeries, supermarkets and restaurants with people nearby who'll collect surplus food at closing time.",
+    step: "Install a food-rescue app (Too Good To Go, Olio, Karma) and do one pickup this week.", supports: 41 },
+  { id: "s4", title: "A library of things", cat: "community", place: "Toronto, Canada",
+    pitch: "The average drill is used for minutes in its lifetime. Tool libraries lend drills, tents, sewing machines and ladders the way book libraries lend books — cheaper for everyone, and a tenth of the stuff gets made.",
+    step: "Ask your public library if they'd add a shelf of borrowable tools.", supports: 27 },
+  { id: "s5", title: "Community solar for renters", cat: "ocean", place: "Melbourne, Australia",
+    pitch: "Most people can't put panels on a roof they don't own. Community solar lets neighbors buy shares in one shared installation and get credit on their bills — clean energy without owning a roof.",
+    step: "Search whether your utility or council offers a community solar program.", supports: 22 },
+  { id: "s6", title: "Every classroom adopts a stream", cat: "learning", place: "Nairobi, Kenya",
+    pitch: "Schools take responsibility for one stretch of a local river or shoreline: testing water, logging litter, presenting findings to the council yearly. Kids learn science on something real, and towns get free monitoring.",
+    step: "Email one teacher you know and link them to a citizen-science water project.", supports: 19 },
+  { id: "s7", title: "Prescribe nature, not just pills", cat: "health", place: "Shetland, Scotland",
+    pitch: "Doctors in Shetland can formally prescribe walks, birdwatching and beach cleans for anxiety and chronic illness. Costs nearly nothing, has no side effects, and gets loneliness and inactivity at the root.",
+    step: "Take one 20-minute outdoor walk without your phone — then tell someone how it felt.", supports: 31 },
+];
+
+const ACTIONS = [
+  // --- materials ---
+  { cause: "materials", time: "10", title: "Do a five-item repair audit", effort: "10 minutes",
+    steps: ["List 5 broken or unused things in your home.", "For each: repair, donate, sell, or recycle?", "Put one of them by the door to deal with this week."] },
+  { cause: "materials", time: "60", title: "Give one thing a second life", effort: "About an hour",
+    steps: ["Pick one broken item — a lamp, a seam, a bike brake.", "Find a fix video for that exact model or problem.", "Fix it, or take it to a repair café — the point is it doesn't go to landfill."] },
+  { cause: "materials", time: "ongoing", title: "Become a repair café regular", effort: "Monthly",
+    steps: ["Find your nearest repair café (repaircafe.org lists thousands).", "Go once as a visitor with something broken.", "If you can fix, sew or solder — offer to volunteer next time."] },
+  // --- ocean ---
+  { cause: "ocean", time: "10", title: "Move your money's footprint", effort: "10 minutes",
+    steps: ["Check whether your bank or pension invests in fossil fuel expansion (bank.green rates most banks).", "If it does, note one greener alternative available in your country.", "Set a reminder to start the switch this month — it's one form."] },
+  { cause: "ocean", time: "60", title: "Do a 30-minute litter transect", effort: "About an hour",
+    steps: ["Walk one stretch of beach, riverbank or park with a bag and gloves.", "Tally what you collect — brands and item types.", "Log it in a citizen-science app; brand data is what changes packaging law."] },
+  { cause: "ocean", time: "ongoing", title: "Cut your biggest emission, not your smallest", effort: "Ongoing",
+    steps: ["Roughly rank your footprint: flights, driving, heating, diet.", "Pick the single biggest one and make one structural change — not a daily willpower fight.", "Tell one person what you changed; norms move in conversation."] },
+  // --- land ---
+  { cause: "land", time: "10", title: "Claim one meal from the waste stream", effort: "10 minutes",
+    steps: ["Install a food-rescue app like Too Good To Go or Olio.", "Reserve one surprise bag from a bakery or shop nearby.", "Collect it at closing time — dinner, saved."] },
+  { cause: "land", time: "60", title: "Plant something a pollinator can use", effort: "About an hour",
+    steps: ["Find a window box, balcony pot or yard corner.", "Get native wildflower seed (garden centers label regional mixes).", "Sow it, water it, and leave it a little wild."] },
+  { cause: "land", time: "ongoing", title: "Shift one weekly meal to plants", effort: "Weekly",
+    steps: ["Pick one meal you already cook weekly.", "Find a plant-based version you'd genuinely eat again.", "Make it your default; one swapped meal a week is ~50 meals a year."] },
+  // --- community ---
+  { cause: "community", time: "10", title: "Introduce two people who should know each other", effort: "10 minutes",
+    steps: ["Think of two people working on similar things who've never met.", "Send one short intro message to both.", "Connectors quietly multiply everyone else's impact — this is the Ellen MacArthur move."] },
+  { cause: "community", time: "60", title: "Show up to one local meeting", effort: "One evening",
+    steps: ["Find your next council, tenants' or neighborhood meeting.", "Go, listen, and say one honest thing about what your street needs.", "Decisions get made by the people in the room; be in the room once."] },
+  { cause: "community", time: "ongoing", title: "Adopt a micro-commitment", effort: "Weekly",
+    steps: ["Pick something tiny and local: a planter, a noticeboard, checking on one elderly neighbor.", "Do it weekly at the same time so it becomes automatic.", "Reliability, not scale, is what makes neighbors trust each other."] },
+  // --- learning ---
+  { cause: "learning", time: "10", title: "Give your knowledge away once", effort: "10 minutes",
+    steps: ["Write down one thing you're genuinely good at.", "Post an offer to teach it — one message in a local or online group.", "One reply is a win; teaching spreads faster than doing."] },
+  { cause: "learning", time: "60", title: "Read to a kid, or record it", effort: "About an hour",
+    steps: ["Volunteer reading programs exist in most cities (libraries know them).", "Sign up for one session — or record a children's story for a literacy charity.", "Early reading is one of the best-evidenced interventions there is."] },
+  { cause: "learning", time: "ongoing", title: "Mentor one person", effort: "1 hr / week",
+    steps: ["Pick a mentoring org in your field or city and apply.", "Commit to one hour a week with one person for six months.", "Depth beats breadth: one real mentee outweighs a hundred likes."] },
+  // --- health ---
+  { cause: "health", time: "10", title: "Check on one person properly", effort: "10 minutes",
+    steps: ["Think of someone who's gone quiet lately.", "Call — don't text — and ask twice: “How are you, really?”", "Loneliness is a health risk on par with smoking; this is real prevention."] },
+  { cause: "health", time: "60", title: "Give blood", effort: "About an hour",
+    steps: ["Find your national blood service's nearest session.", "Book it — most people are eligible and never checked.", "One donation can help up to three people. Few actions are this direct."] },
+  { cause: "health", time: "ongoing", title: "Walk with someone weekly", effort: "Weekly",
+    steps: ["Invite one person — a parent, colleague, neighbor — for a standing weekly walk.", "Same day, same time, rain or shine.", "You get exercise, they get company, and it costs nothing."] },
+];
+
+const STARTERS = [
+  "I don't know where to start",
+  "I have 10 minutes a day",
+  "Help me sharpen my idea",
+  "What did Ellen MacArthur do?",
+];
+
+/* ---------- storage ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("rfi:" + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("rfi:" + k, JSON.stringify(v)); } catch {} },
+};
+let myIdeas   = store.get("ideas", []);
+let supports  = store.get("supports", {});   // id -> true
+let extraSup  = store.get("extraSup", {});   // id -> n (my +1s materialized)
+let doneActs  = store.get("done", {});       // action index -> true
+let apiKey    = store.get("key", "");
+let chatHist  = [];                          // session only
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b === btn ? "true" : "false"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    $("panel-" + btn.dataset.panel).classList.add("active");
+    $("fabNew").classList.toggle("show", btn.dataset.panel === "ideas");
+    window.scrollTo({ top: 0 });
+  });
+});
+
+/* ---------- ideas ---------- */
+let ideaFilter = "all";
+
+function allIdeas() {
+  return [...myIdeas.map(i => ({ ...i, mine: true })), ...SEED_IDEAS];
+}
+function renderIdeaFilters() {
+  const row = $("ideaFilters");
+  const cats = [["all", "All"], ...Object.entries(CATS).map(([k, v]) => [k, v.label])];
+  row.innerHTML = cats.map(([k, label]) =>
+    `<button class="chip" data-f="${k}" aria-pressed="${ideaFilter === k}">${label}</button>`).join("");
+  row.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+    ideaFilter = c.dataset.f; renderIdeaFilters(); renderIdeas();
+  }));
+}
+function renderIdeas() {
+  const list = $("ideaList");
+  const ideas = allIdeas().filter(i => ideaFilter === "all" || i.cat === ideaFilter);
+  if (!ideas.length) { list.innerHTML = `<div class="empty">Nothing here yet — be the first to post in this cause.</div>`; return; }
+  list.innerHTML = ideas.map(i => {
+    const cat = CATS[i.cat] || CATS.community;
+    const n = (i.supports || 0) + (extraSup[i.id] || 0);
+    return `<article class="card">
+      <div class="meta">
+        <span class="cat" style="--c:${cat.color}">${cat.label}</span>
+        <span class="origin">${esc(i.place || "somewhere on Earth")}</span>
+        ${i.mine ? '<span class="mine">· yours</span>' : ""}
+      </div>
+      <h3>${esc(i.title)}</h3>
+      <p class="pitch">${esc(i.pitch)}</p>
+      ${i.step ? `<p class="step"><b>First step:</b> ${esc(i.step)}</p>` : ""}
+      <div class="cardfoot">
+        <button class="support" data-id="${i.id}" aria-pressed="${!!supports[i.id]}">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="${supports[i.id] ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.5-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.5 12c-2 4.4-9.5 9-9.5 9z"></path></svg>
+          <span class="n">${n}</span> back this
+        </button>
+      </div>
+    </article>`;
+  }).join("");
+  list.querySelectorAll(".support").forEach(b => b.addEventListener("click", () => {
+    const id = b.dataset.id;
+    if (supports[id]) { delete supports[id]; extraSup[id] = (extraSup[id] || 1) - 1; }
+    else { supports[id] = true; extraSup[id] = (extraSup[id] || 0) + 1; toast("Backed. Now go do its first step."); }
+    store.set("supports", supports); store.set("extraSup", extraSup);
+    renderIdeas();
+  }));
+}
+
+/* ---------- new idea sheet ---------- */
+function openSheet(sheet) { $("scrim").classList.add("open"); sheet.classList.add("open"); }
+function closeSheets() {
+  $("scrim").classList.remove("open");
+  document.querySelectorAll(".sheet").forEach(s => s.classList.remove("open"));
+}
+$("scrim").addEventListener("click", closeSheets);
+$("fabNew").addEventListener("click", () => openSheet($("ideaSheet")));
+$("fCancel").addEventListener("click", closeSheets);
+$("fCat").innerHTML = Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
+$("fSubmit").addEventListener("click", () => {
+  const title = $("fTitle").value.trim(), pitch = $("fPitch").value.trim();
+  if (!title || !pitch) { toast("Give it a title and a pitch first."); return; }
+  myIdeas.unshift({
+    id: "u" + Date.now(), title, pitch,
+    cat: $("fCat").value, place: $("fPlace").value.trim(),
+    step: $("fStep").value.trim(), supports: 0,
+  });
+  store.set("ideas", myIdeas);
+  ["fTitle", "fPitch", "fPlace", "fStep"].forEach(id => $(id).value = "");
+  closeSheets(); ideaFilter = "all"; renderIdeaFilters(); renderIdeas();
+  toast("Posted. Ideas grow when they're shared.");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* ---------- act ---------- */
+let cause = store.get("cause", "materials");
+let time = store.get("time", "10");
+
+function renderActChips() {
+  $("causeChips").innerHTML = Object.entries(CATS).map(([k, v]) =>
+    `<button class="chip" data-c="${k}" aria-pressed="${cause === k}">${v.label}</button>`).join("");
+  $("timeChips").innerHTML = [["10", "10 minutes"], ["60", "About an hour"], ["ongoing", "Ongoing time"]].map(([k, l]) =>
+    `<button class="chip" data-t="${k}" aria-pressed="${time === k}">${l}</button>`).join("");
+  $("causeChips").querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+    cause = c.dataset.c; store.set("cause", cause); renderActChips(); renderActions();
+  }));
+  $("timeChips").querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+    time = c.dataset.t; store.set("time", time); renderActChips(); renderActions();
+  }));
+}
+function renderTally() {
+  const n = Object.keys(doneActs).length;
+  $("tally").hidden = n === 0;
+  $("tallyN").textContent = n;
+}
+function renderActions() {
+  const list = $("actionList");
+  const matches = ACTIONS.map((a, idx) => ({ ...a, idx })).filter(a => a.cause === cause && a.time === time);
+  const cat = CATS[cause];
+  list.innerHTML = matches.map(a => `
+    <article class="card action" style="--c:${cat.color}">
+      <div class="effort">${esc(a.effort)}</div>
+      <h3>${esc(a.title)}</h3>
+      <ol>${a.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+      <button class="done-btn" data-idx="${a.idx}" aria-pressed="${!!doneActs[a.idx]}">${doneActs[a.idx] ? "✓ Done" : "Mark done"}</button>
+    </article>`).join("");
+  list.querySelectorAll(".done-btn").forEach(b => b.addEventListener("click", () => {
+    const i = b.dataset.idx;
+    if (doneActs[i]) delete doneActs[i]; else { doneActs[i] = true; toast("Counted. That's how it adds up."); }
+    store.set("done", doneActs); renderActions(); renderTally();
+  }));
+}
+
+/* ---------- guide ---------- */
+function addMsg(text, who) {
+  const div = document.createElement("div");
+  div.className = "msg " + who;
+  if (who === "bot") div.innerHTML = esc(text).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  else div.textContent = text;
+  $("chatlog").appendChild(div);
+  div.scrollIntoView({ block: "end", behavior: "smooth" });
+}
+
+function localCoach(raw) {
+  const q = raw.toLowerCase();
+  const has = (...ws) => ws.some(w => q.includes(w));
+
+  if (has("ellen", "macarthur")) return "Ellen MacArthur broke the solo round-the-world sailing record in 2005. Living for 71 days on exactly what her boat carried changed how she saw the economy: on a boat — and a planet — there is no “away” to throw things to.\n\nShe retired from racing at her peak and founded the Ellen MacArthur Foundation, which made the **circular economy** a mainstream idea: design products so materials circulate forever instead of becoming waste. She carried that idea between sailors, schools, CEOs and governments.\n\nThe lesson for you: you don't have to invent an idea to matter. **Carrying a good one to a new place counts just as much.** Anyone you know who should hear about one of the ideas in the commons?";
+  if (has("start", "begin", "don't know", "dont know", "where do i", "lost", "overwhelm")) return "Totally normal — “the world” is too big a unit to act on. Shrink it:\n\n1. **Pick one cause** that genuinely bugs you (not the one you feel you *should* pick).\n2. **Pick your honest time budget** — 10 minutes counts.\n3. Open the **Act** tab, set those two, and do the first action today, not perfectly, just done.\n\nWhat's the cause that actually gets under your skin — waste, climate, loneliness, kids' education, health?";
+  if (has("10 min", "ten min", "no time", "busy", "little time")) return "Ten minutes a day is a real budget — about 60 hours a year. Spend it where it compounds:\n\n• **Intro-making:** connect two people working on the same problem. Two messages, huge leverage.\n• **Money moves:** switching a bank or pension away from fossil expansion is a one-time 10-minute form with years of effect.\n• **One rescue:** reserve one surplus-food bag on your way home.\n\nOpen **Act**, choose your cause and “10 minutes”, and it'll hand you one of these as concrete steps. Which of the three sounds most like you?";
+  if (has("sharpen", "my idea", "improve my idea", "refine", "feedback", "pitch")) return "Happy to. Answer these three, and your idea will already be sharper than most:\n\n1. **Who exactly is it for?** (“everyone” means no one — name a person or group)\n2. **What's the smallest version** that could exist within a month?\n3. **Who has tried something like it** anywhere in the world — and what happened?\n\nWrite your answers here if you like, then post the idea with its **first step** filled in. Ideas with a doable first step get backed far more.";
+  if (has("climate", "carbon", "emission", "energy", "warming")) return "The honest version: your biggest levers are structural, not daily willpower.\n\n1. **Money** — where your bank and pension invest usually outweighs your bin. Check yours at a rating site like bank.green.\n2. **Your biggest emission** — for most people it's flights, driving or heating. One structural change (one fewer flight, a thermostat schedule, one transit habit) beats fifty small sacrifices.\n3. **Your voice** — one email to a local representative about bike lanes or heat pumps is read by an actual human.\n\nOpen **Act → Ocean & climate** for these as step-by-step actions. Which lever feels doable?";
+  if (has("waste", "plastic", "recycl", "circular", "repair", "trash", "rubbish")) return "This is the Ellen MacArthur home turf. The order of operations that actually matters:\n\n**Refuse → Reduce → Repair → Reuse → then recycle.** Recycling is the last resort, not the goal.\n\nThe highest-leverage personal move is **repair**: every fixed item is a manufactured item that never happens. Try the “five-item repair audit” in **Act → Circular economy → 10 minutes** — and if there's a repair café near you, that's your gateway drug.\n\nWant help finding what to fix first?";
+  if (has("lonel", "communit", "neighbo", "local", "isolat")) return "Community work is the least glamorous and maybe the highest-return cause there is — trust between neighbors improves health, safety and happiness all at once.\n\nThree escalating moves:\n1. **Check on one person properly** — call, don't text (10 min).\n2. **Be in the room** — one local meeting, one honest sentence (an evening).\n3. **A micro-commitment** — something tiny you do weekly, forever. Reliability is the whole trick.\n\nAll three are in **Act → Community** with steps. Who's the first person you'd check on?";
+  if (has("food", "hunger", "farm", "eat", "meat", "diet")) return "Food is one of the few areas where one person's choices genuinely add up fast:\n\n• A third of all food is wasted — **one rescue pickup** via Too Good To Go or Olio saves a meal tonight.\n• **One plant-based meal a week**, kept forever, is ~50 meals a year — pick one you'd actually crave.\n• **Grow one pollinator patch** — a window box counts.\n\nAll in **Act → Nature & food**. Want the 10-minute version or the ongoing one?";
+  if (has("teach", "school", "educat", "mentor", "kid", "child")) return "Education compounds harder than almost anything — one confident reader becomes decades of better outcomes.\n\n• **10 minutes:** offer to teach one thing you know, in one message to one group.\n• **An hour:** a volunteer reading session — libraries know the local programs.\n• **Ongoing:** mentor one person for six months. Depth beats breadth every time.\n\nThey're all in **Act → Education**. Which fits your life right now?";
+  if (has("health", "blood", "care", "mental", "doctor", "nhs")) return "Three unusually direct health actions:\n\n1. **Give blood** — one hour, up to three people helped, most people eligible and never asked.\n2. **Call someone who's gone quiet** — loneliness carries health risks comparable to smoking.\n3. **A standing weekly walk** with one person — exercise for you, company for them.\n\nSee **Act → Health & care** for the steps. The blood one is the most underrated — want me to talk you into it?";
+  if (has("money", "donate", "charit", "give", "fund")) return "If money is your lever, give like an investor:\n\n1. **Pick effectiveness, not familiarity** — evaluators like GiveWell surface charities where a donation goes furthest per dollar.\n2. **Make it monthly and automatic** — recurring gifts are what let organizations plan.\n3. **1% of income** is a great start; you won't feel it, they will.\n\nAnd remember your bank account itself is a vote — where it's invested may matter more than what you donate. Want the 10-minute money action from the Act tab?";
+  if (has("thank", "great", "cool", "awesome", "nice")) return "Anytime. One thing before you go: pick **one action** from the Act tab and mark it done today — momentum is the whole game. What will it be?";
+  if (has("hi", "hello", "hey")) return "Hello! I'm the Guide — think of me as a co-navigator for doing some good.\n\nI can help you **find where to start**, **turn spare time into real actions**, or **sharpen an idea** before you post it to the commons. What brings you here?";
+  return "Here's how I can help right now:\n\n• **“I don't know where to start”** — I'll help you pick a cause and a first action.\n• **Name a cause** — climate, waste, food, community, education, health — and I'll give you the honest highest-leverage moves.\n• **“Help me sharpen my idea”** — three questions that make any idea post better.\n\nOr just tell me how much time you have, and I'll match it.";
+}
+
+async function askClaude(text) {
+  const messages = chatHist.slice(-12).concat([{ role: "user", content: text }]);
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-5",
+      max_tokens: 600,
+      system: "You are the Guide on “Room for Improvement”, a small think-tank app where people share ideas for making the world better and get actionable steps. Be warm, concrete and brief (under 180 words). Always steer toward one specific, realistic action the person can take this week. You can reference the app's tabs: Ideas (post/back ideas), Act (choose cause + time, get step-by-step actions). Use **bold** sparingly for key phrases. Never invent statistics.",
+      messages,
+    }),
+  });
+  if (!res.ok) throw new Error("API " + res.status);
+  const data = await res.json();
+  return (data.content || []).map(b => b.text || "").join("").trim() || "…";
+}
+
+let thinking = false;
+async function sendChat(text) {
+  text = text.trim();
+  if (!text || thinking) return;
+  addMsg(text, "me");
+  $("chatInput").value = "";
+  thinking = true;
+  const wait = document.createElement("div");
+  wait.className = "msg bot"; wait.textContent = "…";
+  $("chatlog").appendChild(wait);
+  let reply, live = false;
+  if (apiKey) {
+    try { reply = await askClaude(text); live = true; }
+    catch { reply = null; }
+  }
+  if (!reply) {
+    await new Promise(r => setTimeout(r, 350));
+    reply = localCoach(text);
+    if (apiKey && !live) reply = "(Couldn't reach the live AI from here — built-in coach answering.)\n\n" + reply;
+  }
+  wait.remove();
+  addMsg(reply, "bot");
+  chatHist.push({ role: "user", content: text }, { role: "assistant", content: reply });
+  thinking = false;
+}
+$("chatSend").addEventListener("click", () => sendChat($("chatInput").value));
+$("chatInput").addEventListener("keydown", e => { if (e.key === "Enter") sendChat($("chatInput").value); });
+$("starters").innerHTML = STARTERS.map(s => `<button class="chip">${s}</button>`).join("");
+$("starters").querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => sendChat(c.textContent)));
+
+function renderAiNote() {
+  $("aiNote").innerHTML = apiKey
+    ? `Live AI is on (Claude). <button id="aiCfg">Settings</button>`
+    : `Using the built-in coach — works offline. <button id="aiCfg">Connect a live AI</button>`;
+  $("aiCfg").addEventListener("click", () => { $("fKey").value = apiKey; openSheet($("settingsSheet")); });
+}
+$("settingsBtn").addEventListener("click", () => { $("fKey").value = apiKey; openSheet($("settingsSheet")); });
+$("keySave").addEventListener("click", () => {
+  apiKey = $("fKey").value.trim(); store.set("key", apiKey);
+  closeSheets(); renderAiNote(); toast(apiKey ? "Live AI connected." : "Key removed.");
+});
+$("keyClear").addEventListener("click", () => {
+  apiKey = ""; store.set("key", ""); $("fKey").value = "";
+  closeSheets(); renderAiNote(); toast("Using the built-in coach.");
+});
+
+/* ---------- boot ---------- */
+renderIdeaFilters(); renderIdeas();
+renderActChips(); renderActions(); renderTally();
+renderAiNote();
+addMsg("Welcome aboard. I'm the Guide.\n\nThis place runs on one belief: good ideas get better when they travel, and good intentions get real when they turn into a first step.\n\nTell me what you care about — or tap a question below.", "bot");
+</script>
+</body>
+</html>
